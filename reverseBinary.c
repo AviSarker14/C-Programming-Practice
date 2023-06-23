@@ -1,54 +1,58 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
 
-void toBinary(unsigned int num, int binary[])
-{
-    int i;
-    for(i=31;i>=0;i--) {
-        binary[i] = num %2;
-        num = num /2;
+struct node {
+    int data;
+    struct node *next;
+};
+struct node *head = NULL;
+struct node *next = NULL;
+void printList() {
+    struct node *ptr = head;
+    while(ptr != NULL) {
+        printf("Data = %d \n", ptr->data);
+        ptr = ptr->next;
     }
 }
-
-void print(unsigned int num) {
-    int binary[32];
-    int i = 0;
-    toBinary(num,binary);
-    for(i=0; i<32; i++) {
-        if(i%4 == 0) {
-            printf(" ");
+void insert(int data) {
+    struct node *link = (struct node*) malloc(sizeof(struct node));
+    link->data =data;
+    link->next = head;
+    head=link;
+}
+void reverse(struct node** head_ref ) {
+    struct node *prev = NULL;
+    struct node *current= *head_ref;
+    struct node *next;
+    while(current != NULL) {
+        next= current ->next;
+        current->next = prev;
+        prev=current;
+        current=next;
+    }
+    *head_ref = prev;
+}
+int main() {
+    int count=1;
+    int a;
+    while(1) {
+        printf("Input data for node %d: ", count);
+        if(scanf("%d",&a)== EOF) {
+            break;
         }
-        printf("%d",binary[i]);
+        else {
+            insert(a);
+            count++;
+        }
     }
     printf("\n");
-
-}
-unsigned int reverseBits(unsigned int num)
-{
-    unsigned int result = 0;
-    int i = 0;
-    for( i=0; i<32; i++) {
-        result <<=1;
-        if ((num & 1) == 1)
-            result++;
-        num>>=1;
-    }
-    return result;
-}
-
-int main(int argc,char *argv[]) {
-    unsigned num;
-    unsigned reverse;
-    num = atoi(argv[1]);
-    printf("\n%u: ",num);
-    print(num);
+    printf("Data entered in the list are: \n");
+    reverse(&head);
+    printList();
     printf("\n");
-    reverse = reverseBits(num);
-    printf("%u: ", reverse);
-    print(reverse);
-    printf("\n");
-
-    printf("\n");
-
-    return 0;
+    printf("The list in reverse are: \n");
+    reverse(&head);
+    printList();
 }
